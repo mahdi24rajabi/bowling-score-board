@@ -12,7 +12,7 @@ public class Thrower {
             System.out.println("Invalid Number. Available balls: "+ availablePins +"\nThrow Again: ");
             knockedPins = scanner.nextInt();
         }
-
+        scanner.close();
         return knockedPins;
     }
 }
