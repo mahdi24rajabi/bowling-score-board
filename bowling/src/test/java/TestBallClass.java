@@ -7,7 +7,7 @@ public class TestBallClass {
 
     @Test
     @DisplayName("Test Ball creation")
-    public void testWaitFrame() {
+    public void testBall() {
         Ball ball = new Ball(10);
         assertEquals(10, ball.getKnockedPins());
     }
