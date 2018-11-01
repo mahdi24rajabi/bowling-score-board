@@ -28,7 +28,7 @@ public class ScoreBoardTestClass {
         assertAll("Initial State of Board",
                 () -> assertEquals(10, bowlingScoreBoardApp.getFrames().size()),
                 () -> assertEquals(0, bowlingScoreBoardApp.getUnscoredFrames().size()),
-                () -> assertEquals(new Integer(0), bowlingScoreBoardApp.getCurrentFrameIndex())
+                () -> assertEquals(Integer.valueOf(0), bowlingScoreBoardApp.getCurrentFrameIndex())
         );
 
         logger.info(String.format("About to execute [%s]",

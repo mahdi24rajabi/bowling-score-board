@@ -66,7 +66,7 @@ public class Frame {
 
     public void throwBall(Ball ball) throws InvalidKnockedBallsException {
         if(ball.getKnockedPins() > availablePins){
-            throw new InvalidKnockedBallsException();
+            throw new InvalidKnockedBallsException(availablePins);
         }
 
         availablePins -= ball.getKnockedPins();

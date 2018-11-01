@@ -44,7 +44,7 @@ public class BowlingScoreBoardApp {
 
                 System.out.println("\n\n");
             } catch (InvalidKnockedBallsException e){
-                System.out.println("Invalid Number. Knocked pins is more than available pins. Throw again.");
+                System.out.println("Invalid Number. Knocked pins is more than available pins. Throw again. Available number of pins: " + e.getAvailablePins());
             }
         }
 
@@ -63,7 +63,7 @@ public class BowlingScoreBoardApp {
         }
 
         if(ball.getKnockedPins() > availablePins){
-            throw new InvalidKnockedBallsException();
+            throw new InvalidKnockedBallsException(availablePins);
         }
 
         if(currentFrame.isPlayable()) {
