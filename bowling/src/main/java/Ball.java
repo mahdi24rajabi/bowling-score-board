@@ -1,5 +1,5 @@
 public class Ball {
-    int knockedPins;
+    private int knockedPins;
 
     public Ball(int knockedBalls) {
         this.knockedPins = knockedBalls;

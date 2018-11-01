@@ -1,6 +1,3 @@
-
-
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +9,18 @@ public class BowlingScoreBoardApp {
     private List<Frame> frames = new ArrayList<>();
     private Integer currentFrameIndex = 0;
     private List<Frame> unscoredFrames = new ArrayList<>();
+
+    public List<Frame> getFrames() {
+        return frames;
+    }
+
+    public Integer getCurrentFrameIndex() {
+        return currentFrameIndex;
+    }
+
+    public List<Frame> getUnscoredFrames() {
+        return unscoredFrames;
+    }
 
     public BowlingScoreBoardApp() {
         for (int i = 0; i < NUMBER_OF_FRAMES; i++) {
@@ -27,52 +36,67 @@ public class BowlingScoreBoardApp {
     }
 
     public void startGame() {
-        while (!frames.get(NUMBER_OF_FRAMES - 1).isCalculable()) {
-            Frame currentFrame = frames.get(currentFrameIndex);
+        while (continueGame()) {
+            int knockedPins = Thrower.throwBall();
 
-            int availablePins = currentFrame.getAvailablePins();
-            if(currentFrameIndex == NUMBER_OF_FRAMES - 1 && !currentFrame.isCalculable()){
-                availablePins = 10;
+            try {
+                throwBalls(new Ball(knockedPins));
+
+                System.out.println("\n\n");
+            } catch (InvalidKnockedBallsException e){
+                System.out.println("Invalid Number. Knocked pins is more than available pins. Throw again.");
             }
+        }
 
-            int knockedPins = Thrower.startThrowing(availablePins);
+    }
 
-            Ball ball = new Ball(knockedPins);
+    public boolean continueGame() {
+        return !frames.get(NUMBER_OF_FRAMES - 1).isCalculable();
+    }
 
-            if(currentFrame.isPlayable()) {
-                currentFrame.throwBall(ball);
+    public void throwBalls(Ball ball) throws InvalidKnockedBallsException {
+        Frame currentFrame = frames.get(currentFrameIndex);
+
+        int availablePins = currentFrame.getAvailablePins();
+        if(currentFrameIndex == NUMBER_OF_FRAMES - 1 && !currentFrame.isCalculable()){
+            availablePins = 10;
+        }
+
+        if(ball.getKnockedPins() > availablePins){
+            throw new InvalidKnockedBallsException();
+        }
+
+        if(currentFrame.isPlayable()) {
+            currentFrame.throwBall(ball);
+        }
+
+        if (!currentFrame.getFrameStatus().equals(Frame.FrameStatus.PLAYING)){
+            if(currentFrameIndex < NUMBER_OF_FRAMES -1 ) {
+                currentFrameIndex++;
             }
+        }
 
-            if (!currentFrame.getFrameStatus().equals(Frame.FrameStatus.PLAYING)){
-                if(currentFrameIndex < NUMBER_OF_FRAMES -1 ) {
-                    currentFrameIndex++;
-                }
+        Iterator<Frame> unscoredFrameIterator = unscoredFrames.iterator();
+        while (unscoredFrameIterator.hasNext()) {
+            Frame unscoredFrame = unscoredFrameIterator.next();
+            unscoredFrame.deliverBonus(ball);
+            if (!unscoredFrame.getFrameStatus().equals(Frame.FrameStatus.SPARE) &&
+                    !unscoredFrame.getFrameStatus().equals(Frame.FrameStatus.STRIKE)
+            ) {
+                unscoredFrameIterator.remove();
             }
+        }
 
-            Iterator<Frame> unscoredFrameIterator = unscoredFrames.iterator();
-            while (unscoredFrameIterator.hasNext()) {
-                Frame unscoredFrame = unscoredFrameIterator.next();
-                unscoredFrame.deliverBonus(ball);
-                if (!unscoredFrame.getFrameStatus().equals(Frame.FrameStatus.SPARE) &&
-                        !unscoredFrame.getFrameStatus().equals(Frame.FrameStatus.STRIKE)
-                ) {
-                    unscoredFrameIterator.remove();
-                }
+        if (currentFrame.getFrameStatus().equals(Frame.FrameStatus.SPARE) ||
+                currentFrame.getFrameStatus().equals(Frame.FrameStatus.STRIKE)) {
+            unscoredFrames.add(currentFrame);
+        }
+
+        for (Frame frame : frames) {
+            if (frame.isCalculable()) {
+                frame.calculateScore();
             }
-
-            if (currentFrame.getFrameStatus().equals(Frame.FrameStatus.SPARE) ||
-                    currentFrame.getFrameStatus().equals(Frame.FrameStatus.STRIKE)) {
-                unscoredFrames.add(currentFrame);
-            }
-
-            for (Frame frame : frames) {
-                if (frame.isCalculable()) {
-                    frame.calculateScore();
-                }
-                System.out.println(frame.toString());
-            }
-
-            System.out.println("\n\n");
+            System.out.println(frame.toString());
         }
 
     }

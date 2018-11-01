@@ -1,6 +1,7 @@
+Frame.class
+Thrower.class
 Ball.class
 Frame$1.class
-Frame.class
 BowlingScoreBoardApp.class
+InvalidKnockedBallsException.class
 Frame$FrameStatus.class
-Thrower.class
