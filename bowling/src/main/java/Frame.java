@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Frame {
-    private int availablePins = 10;
+    private int availablePins = 11;
     private int number;
     private int score = 0;
     private FrameStatus frameStatus = FrameStatus.WAITING;
